@@ -23,6 +23,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.SkyRenderHandler;
 
+import net.minecraftforge.fml.ModList;
 import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.client.core.handler.ClientTickHandler;
@@ -35,7 +36,9 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 	private static final ResourceLocation textureSkybox = new ResourceLocation(LibResources.MISC_SKYBOX);
 	private static final ResourceLocation textureRainbow = new ResourceLocation(LibResources.MISC_RAINBOW);
 	private static final ResourceLocation MOON_PHASES_TEXTURES = new ResourceLocation("textures/environment/moon_phases.png");
-	private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
+	private static final ResourceLocation SUN_TEXTURES = ModList.get().isLoaded("teletubbies") ?
+			new ResourceLocation("teletubbies", "textures/environment/sun.png") :
+			new ResourceLocation("textures/environment/sun.png");
 	private static final ResourceLocation[] planetTextures = new ResourceLocation[] {
 			new ResourceLocation(LibResources.MISC_PLANET + "0.png"),
 			new ResourceLocation(LibResources.MISC_PLANET + "1.png"),
@@ -44,6 +47,10 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 			new ResourceLocation(LibResources.MISC_PLANET + "4.png"),
 			new ResourceLocation(LibResources.MISC_PLANET + "5.png")
 	};
+
+	private static final float smaller = (2.0f/3.0f);
+	private static final float stepSize = 5.0f;
+	private static float yaw;
 
 	// [VanillaCopy] WorldRenderer.renderSky, overworld section, edits noted
 	@Override
@@ -121,8 +128,41 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 		// Botania: extras
 		renderExtra(matrixStackIn, world, partialTicks, insideVoid);
 		matrixStackIn.rotate(Vector3f.XP.rotationDegrees(world.getCelestialAngle(partialTicks) * 360.0F));
+		// Teletubbies sun rotation (licensed under GNU LGPL 3)
+		float playerYaw = mc.player.rotationYaw % 360;
+		if (playerYaw < 0) {
+			playerYaw += 360f;
+		}
+
+		float error = playerYaw - yaw;
+		if (error > 180f) {
+			error -= 360f;
+		}
+		if (error < -180f) {
+			error += 360f;
+		}
+
+		if (Math.abs(error) < stepSize) {
+			error = 0;
+			yaw = playerYaw;
+		}
+
+		if (error > 0) {
+			yaw += stepSize;
+		}
+		if (error < 0) {
+			yaw -= stepSize;
+		}
+
+		float offset = 90f;
+		if (mc.gameSettings.thirdPersonView == 2) {
+			offset += 180f;
+		}
+
+		matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-yaw + offset));
+		// End Teletubbies sun rotation
 		Matrix4f matrix4f1 = matrixStackIn.getLast().getMatrix();
-		float f12 = 60.0F; // Botania: 30 -> 60
+		float f12 = 60.0F * smaller; // Botania: 30 -> 60
 		mc.textureManager.bindTexture(SUN_TEXTURES);
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 		bufferbuilder.pos(matrix4f1, -f12, 100.0F, -f12).tex(0.0F, 0.0F).endVertex();
@@ -131,7 +171,8 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 		bufferbuilder.pos(matrix4f1, -f12, 100.0F, f12).tex(0.0F, 1.0F).endVertex();
 		bufferbuilder.finishDrawing();
 		WorldVertexBufferUploader.draw(bufferbuilder);
-		f12 = 60.0F; // Botania: 20 -> 60
+		matrixStackIn.rotate(Vector3f.YP.rotationDegrees(yaw - offset)); // Rotate it back
+		f12 = 60.0F * smaller; // Botania: 20 -> 60
 		mc.textureManager.bindTexture(MOON_PHASES_TEXTURES);
 		int k = world.getMoonPhase();
 		int l = k % 4;
@@ -214,7 +255,7 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 		}
 
 		// === Planets
-		float scale = 20F;
+		float scale = 20F * smaller;
 		float lowA = Math.max(0F, effCelAng - 0.3F) * rain;
 		float a = Math.max(0.1F, lowA);
 
@@ -253,6 +294,7 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 				ms.rotate(new Vector3f(1, 0, 0.5F).rotationDegrees(-60));
 				scale = 40F;
 			}
+			scale *= smaller;
 		}
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		ms.pop();
@@ -260,7 +302,7 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 		// === Rays
 		Minecraft.getInstance().textureManager.bindTexture(textureSkybox);
 
-		scale = 20F;
+		scale = 20F * smaller;
 		a = lowA;
 		ms.push();
 		RenderSystem.blendFuncSeparate(770, 1, 1, 0);
@@ -323,10 +365,13 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 		ms.pop();
 
 		// === Rainbow
+		/* This does not quite look right in Biospheres.
+		 * Maybe the spheres would act as some kind of prisms,
+		 * but then there'd be multiple, more subtle rainbows instead of this giant one.
 		ms.push();
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		Minecraft.getInstance().textureManager.bindTexture(textureRainbow);
-		scale = 10F;
+		scale = 10F * smaller;
 		float effCelAng1 = celAng;
 		if (effCelAng1 > 0.25F) {
 			effCelAng1 = 1F - effCelAng1;
@@ -367,6 +412,7 @@ public class SkyblockSkyRenderer implements SkyRenderHandler {
 		}
 		tessellator.draw();
 		ms.pop();
+		*/
 		RenderSystem.color4f(1F, 1F, 1F, 1F - insideVoid);
 		GlStateManager.blendFuncSeparate(770, 1, 1, 0);
 	}

@@ -71,10 +71,10 @@ public final class ConfigHandler {
 					.comment("Set this to false to disable custom armor models")
 					.define("armor_models", true);
 			enableFancySkybox = builder
-					.comment("Set this to false to disable the fancy skybox in Garden of Glass")
+					.comment("Set this to false to disable the fancy skybox in Biospheres and Garden of Glass worlds")
 					.define("fancy_skybox.enabled", true);
 			enableFancySkyboxInNormalWorlds = builder
-					.comment("Set this to true to enable the fancy skybox in non Garden of Glass worlds. (Does not require Garden of Glass loaded to use, needs 'fancy_skybox.enabled' to be true as well)")
+					.comment("Set this to true to enable the fancy skybox in non Biospheres or Garden of Glass worlds. (Needs 'fancy_skybox.enabled' to be true as well)")
 					.define("fancy_skybox.normal_worlds", false);
 			manaBarHeight = builder
 					.comment("The height of the mana display bar in above the XP bar. You can change this if you have a mod that changes where the XP bar is.")

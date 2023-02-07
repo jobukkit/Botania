@@ -18,12 +18,16 @@ import vazkii.botania.common.world.WorldTypeSkyblock;
 
 public final class SkyblockRenderEvents {
 
+	private static boolean isWorldBiospheres(World world) {
+		return world.getWorldInfo().getGenerator().getName().equals("biospheres");
+	}
+
 	public static void onRender(RenderWorldLastEvent event) {
 		World world = Minecraft.getInstance().world;
 		if (ConfigHandler.CLIENT.enableFancySkybox.get()
 				&& world.getDimension().getType() == DimensionType.OVERWORLD
-				&& (ConfigHandler.CLIENT.enableFancySkyboxInNormalWorlds.get()
-						|| WorldTypeSkyblock.isWorldSkyblock(world))) {
+				&& (isWorldBiospheres(world) || WorldTypeSkyblock.isWorldSkyblock(world) ||
+					ConfigHandler.CLIENT.enableFancySkyboxInNormalWorlds.get())) {
 			if (!(world.getDimension().getSkyRenderer() instanceof SkyblockSkyRenderer)) {
 				world.getDimension().setSkyRenderer(new SkyblockSkyRenderer());
 			}
