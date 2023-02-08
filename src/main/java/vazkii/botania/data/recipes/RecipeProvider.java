@@ -926,7 +926,7 @@ public class RecipeProvider extends net.minecraft.data.RecipeProvider {
 					.build(consumer, "botania:petal_" + color.getName());
 			ShapelessRecipeBuilder.shapelessRecipe(ModItems.getDye(color))
 					.addIngredient(colorOverrides.getOrDefault(color, Ingredient.fromTag(ModTags.Items.getFlowerTag(color))))
-					.addIngredient(ModItems.pestleAndMortar)
+					.addIngredient(Ingredient.fromTag(ModTags.Items.TOOL_GRINDER))
 					.setGroup("botania:dye")
 					.addCriterion("has_item", hasItem(ModItems.getDye(color)))
 					.addCriterion("has_alt_item", hasItem(ModItems.getPetal(color)))
@@ -935,28 +935,28 @@ public class RecipeProvider extends net.minecraft.data.RecipeProvider {
 
 		ShapelessRecipeBuilder.shapelessRecipe(ModItems.magentaDye, 2)
 				.addIngredient(Items.LILAC)
-				.addIngredient(ModItems.pestleAndMortar)
+				.addIngredient(Ingredient.fromTag(ModTags.Items.TOOL_GRINDER))
 				.setGroup("botania:dye_double")
 				.addCriterion("has_item", hasItem(ModItems.yellowDye))
 				.addCriterion("has_alt_item", hasItem(Items.LILAC))
 				.build(consumer, "botania:dye_magenta_double");
 		ShapelessRecipeBuilder.shapelessRecipe(ModItems.pinkDye, 2)
 				.addIngredient(Items.PEONY)
-				.addIngredient(ModItems.pestleAndMortar)
+				.addIngredient(Ingredient.fromTag(ModTags.Items.TOOL_GRINDER))
 				.setGroup("botania:dye_double")
 				.addCriterion("has_item", hasItem(ModItems.pinkDye))
 				.addCriterion("has_alt_item", hasItem(Items.PEONY))
 				.build(consumer, "botania:dye_pink_double");
 		ShapelessRecipeBuilder.shapelessRecipe(ModItems.redDye, 2)
 				.addIngredient(Items.ROSE_BUSH)
-				.addIngredient(ModItems.pestleAndMortar)
+				.addIngredient(Ingredient.fromTag(ModTags.Items.TOOL_GRINDER))
 				.setGroup("botania:dye_double")
 				.addCriterion("has_item", hasItem(ModItems.redDye))
 				.addCriterion("has_alt_item", hasItem(Items.ROSE_BUSH))
 				.build(consumer, "botania:dye_red_double");
 		ShapelessRecipeBuilder.shapelessRecipe(ModItems.yellowDye, 2)
 				.addIngredient(Items.SUNFLOWER)
-				.addIngredient(ModItems.pestleAndMortar)
+				.addIngredient(Ingredient.fromTag(ModTags.Items.TOOL_GRINDER))
 				.setGroup("botania:dye_double")
 				.addCriterion("has_item", hasItem(ModItems.yellowDye))
 				.addCriterion("has_alt_item", hasItem(Items.SUNFLOWER))
@@ -1210,15 +1210,15 @@ public class RecipeProvider extends net.minecraft.data.RecipeProvider {
 					.build(consumer);
 		}
 
-		ShapedRecipeBuilder.shapedRecipe(ModItems.pestleAndMortar)
-				.key('B', Items.BOWL)
-				.key('S', Tags.Items.RODS_WOODEN)
-				.key('W', ItemTags.PLANKS)
-				.patternLine(" S")
-				.patternLine("W ")
-				.patternLine("B ")
-				.addCriterion("has_item", hasItem(ItemTags.PLANKS))
-				.build(consumer);
+//		ShapedRecipeBuilder.shapedRecipe(ModItems.pestleAndMortar)
+//				.key('B', Items.BOWL)
+//				.key('S', Tags.Items.RODS_WOODEN)
+//				.key('W', ItemTags.PLANKS)
+//				.patternLine(" S")
+//				.patternLine("W ")
+//				.patternLine("B ")
+//				.addCriterion("has_item", hasItem(ItemTags.PLANKS))
+//				.build(consumer);
 		ShapedRecipeBuilder.shapedRecipe(ModItems.manaGun)
 				.key('S', ModBlocks.redstoneSpreader)
 				.key('D', ModTags.Items.GEMS_MANA_DIAMOND)

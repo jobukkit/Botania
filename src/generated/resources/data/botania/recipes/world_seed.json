@@ -7,7 +7,7 @@
   ],
   "key": {
     "S": {
-      "item": "minecraft:wheat_seeds"
+      "tag": "forge:seeds"
     },
     "D": {
       "tag": "forge:gems/dragonstone"

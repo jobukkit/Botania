@@ -37,6 +37,7 @@ public class ModTags {
 		public static final Tag<Item> BLOCKS_MANASTEEL = forgeTag("storage_blocks/manasteel");
 		public static final Tag<Item> BLOCKS_TERRASTEEL = forgeTag("storage_blocks/terrasteel");
 		public static final Tag<Item> BLOCKS_QUARTZ = forgeTag("storage_blocks/quartz");
+		public static final Tag<Item> TOOL_GRINDER = forgeTag("tool_grinder");
 
 		public static final Tag<Item> MYSTICAL_FLOWERS = tag("mystical_flowers");
 		public static final Tag<Item> DOUBLE_MYSTICAL_FLOWERS = tag("double_mystical_flowers");
